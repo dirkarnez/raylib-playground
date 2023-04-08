@@ -1,19 +1,36 @@
 cmake_minimum_required(VERSION 3.18)
 
-project("portaudio-playground")
-
 SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 
-find_package(portaudio 19 EXACT REQUIRED) # PATHS "P:\\Downloads\\cpp-libraries\\portaudio\\build\\cmake\\portaudio")
+project("raylib-playground")
 
-IF(portaudio_FOUND)
-    message(STATUS "YES")
-ELSE(portaudio_FOUND)
-    message(STATUS "NO")
-ENDIF(portaudio_FOUND)
+
+add_library(raylib STATIC IMPORTED)
+
+set_property(
+  TARGET raylib APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE
+)
+
+set_target_properties(raylib PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${raylib_ROOT}/lib/libraylib.a"
+)
+  
+set_target_properties(raylib PROPERTIES
+  MAP_IMPORTED_CONFIG_MINSIZEREL Release
+  MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+)
+
+target_include_directories(raylib INTERFACE "${raylib_ROOT}/include")
 
 add_executable(${PROJECT_NAME}
     "src/main.cpp"
 )
 
-target_link_libraries(${PROJECT_NAME} portaudio_static)
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory "${PROJECT_SOURCE_DIR}/resources/" $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources
+)
+
+target_link_libraries(${PROJECT_NAME} raylib winmm.lib)
+
