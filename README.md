@@ -1,5 +1,6 @@
-portaudio-playground
+raylib-playground
 ====================
+From official examples
 
 ### Using
-- [dirkarnez/portaudio-prebuilt](https://github.com/dirkarnez/portaudio-prebuilt)
+- [dirkarnez/raylib-prebuilt](https://github.com/dirkarnez/raylib-prebuilt)
